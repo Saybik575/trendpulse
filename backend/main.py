@@ -8,15 +8,21 @@ from fastapi import Depends
 from database import get_db, init_db
 from models import SearchHistoryDB
 from schemas import HeadlineSentiment, SentimentResponse, SearchHistoryItem, TrendPoint, TickerTrendResponse
+import os
 # Initialize tables on startup if they don't exist
 init_db()
 
 app = FastAPI()
 
+frontend_url = os.getenv("FRONTEND_URL")
+
 origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]
+
+if frontend_url:
+    origins.append(frontend_url.rstrip("/"))
 
 app.add_middleware(
     CORSMiddleware,
